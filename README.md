@@ -45,7 +45,7 @@ curl http://localhost:8080
 ```
 - через браузер
 ```
-http://localhost:8080x
+http://localhost:8080
 ```
 
 # Сборка контейнера вручную
