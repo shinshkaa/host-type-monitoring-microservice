@@ -1,0 +1,28 @@
+- name: Creating directory for microservice
+  ansible.builtin.file:
+    path: "/opt/microservice/"
+    state: "directory"
+    mode: "0755"
+- name: Copying main.py
+  ansible.builtin.copy:
+    dest: "/opt/microservice/main.py"
+    src: "main.py"
+    mode: "0644"
+
+- name: Stopping microservice if running and disabling service if exists
+  ansible.builtin.systemd_service:
+    name: microservice
+    enabled: false
+    state: "stopped"
+  ignore_errors: true
+
+- name: Removing old container if exists
+  ansible.builtin.command: podman rm -f microservice
+  ignore_errors: true
+
+- name: Selected type is systemd
+  ansible.builtin.include_tasks: systemd.yaml
+  when: deploy_mode == "systemd"
+- name: Selected type is container
+  ansible.builtin.include_tasks: container.yaml
+  when: deploy_mode == "container"

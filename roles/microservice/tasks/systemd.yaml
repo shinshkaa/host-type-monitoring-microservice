@@ -1,0 +1,24 @@
+- name: Installing requirements
+  ansible.builtin.dnf:
+    name:
+      - python3
+      - python3-pip
+      - python3-packaging
+- name: Installing Prometheus client
+  ansible.builtin.pip:
+    name:
+      - prometheus_client
+    executable: pip3
+- name: Copying service file
+  ansible.builtin.copy:
+    dest: "/etc/systemd/system/microservice.service"
+    src: "microservice.service"
+    mode: "0644"
+- name: Reloading system daemon
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+- name: Enabling and starting service
+  ansible.builtin.systemd_service:
+    name: microservice
+    enabled: true
+    state: "started"

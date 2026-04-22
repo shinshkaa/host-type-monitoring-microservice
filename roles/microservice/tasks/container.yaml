@@ -1,0 +1,16 @@
+- name: Copying Dockerfile
+  ansible.builtin.copy:
+    dest: "/opt/microservice/Dockerfile"
+    src: "Dockerfile"
+    mode: "0644"
+
+- name: Installing requirements
+  ansible.builtin.dnf:
+    name: podman
+    state: present
+
+- name: Creating podman image
+  ansible.builtin.command: podman build -t microservice /opt/microservice/
+
+- name: Running podman container
+  ansible.builtin.command: podman run -d --name microservice -p 8080:8080 microservice
